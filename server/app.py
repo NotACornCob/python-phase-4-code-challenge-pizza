@@ -12,12 +12,18 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.json.compact = False
-
 migrate = Migrate(app, db)
 
 db.init_app(app)
 
 api = Api(app)
+
+class RestaurantsResource(Resource):
+    def get(self):
+        pizzas = [pizza.to_dict() for pizza in Pizza.query.all()]
+        return pizzas, 200
+    
+api.add_resource(RestaurantsResource, '/pizzas', endpoint='restaurants')
 
 
 @app.route("/")
