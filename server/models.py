@@ -23,9 +23,9 @@ class RestaurantPizza(db.Model, SerializerMixin):
     #Foreign Key for Restaurant id 
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
     #Relationship mapping the assignment to related pizza
-    pizza = db.relationship('Pizza', back_populates='restaurant_pizza', cascade='delete')
+    pizza = db.relationship('Pizza', back_populates='restaurant_pizzas', cascade='delete')
     #Relationship mapping the assignment to related restaurant
-    restaurant = db.relationship('Restaurant', back_populates='restaurant_pizza', cascade='delete')
+    restaurant = db.relationship('Restaurant', back_populates='restaurant_pizzas', cascade='delete')
 
     # add serialization rules
     serialize_rules = ('-pizza.restaurant_pizzas', '-restaurant.restaurant_pizzas')
@@ -46,7 +46,7 @@ class Restaurant(db.Model, SerializerMixin):
     name = db.Column(db.String)
     address = db.Column(db.String)
     #Relationship mapping the restaurant to related restaurant_pizzas
-    restaurant_pizza = db.relationship("RestaurantPizza", back_populates='restaurant')
+    restaurant_pizzas = db.relationship("RestaurantPizza", back_populates='restaurant')
     #Association proxy to get projects for this employee through assignments
     """ pizza_proxy = association_proxy('restaurant_pizzas', 'pizza',
                                  creator=lambda pizza_obj: RestaurantPizza(pizza=pizza_obj)) """
@@ -65,7 +65,7 @@ class Pizza(db.Model, SerializerMixin):
     ingredients = db.Column(db.String)
 
     #relationship mapping the pizza to related pizza_restaurants 
-    restaurant_pizza = db.relationship('RestaurantPizza', back_populates='pizza')
+    restaurant_pizzas = db.relationship('RestaurantPizza', back_populates='pizza')
     #Association proxy to get projects for this employee through assignments
     """ restaurant_proxy = association_proxy('restaurant_pizzas', 'restaurant',
                                  creator=lambda restaurant_obj: RestaurantPizza(restaurant=restaurant_obj)) """
